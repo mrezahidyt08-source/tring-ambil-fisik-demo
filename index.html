@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimalisasi Layanan Ambil Fisik Emas - Tring! by Pegadaian</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        :root {
+            --tring-green: #00824B;
+            --tring-green-hover: #006B3E;
+            --tring-yellow: #FFCB05;
+            --gold-premium: #D4AF37;
+            --bg-light: #F5F7F8;
+            --card-white: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --danger-color: #D32F2F;
+            --border-color: #E0E0E0;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-premium: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #ECEFF1;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .phone-wrapper {
+            width: 100%;
+            max-width: 460px;
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 120px;
+            overflow-x: hidden;
+        }
+
+        .tring-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            user-select: none;
+        }
+        .tring-brand {
+            font-family: 'Georgia', cursive, sans-serif;
+            font-style: italic;
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--tring-green);
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+        .tring-dots {
+            position: absolute;
+            top: -6px;
+            right: 2px;
+            display: flex;
+            gap: 2px;
+        }
+        .dot-green { width: 5px; height: 5px; background-color: var(--tring-green); border-radius: 50%; }
+        .dot-yellow { width: 5px; height: 5px; background-color: var(--tring-yellow); border-radius: 50%; }
+        .by-pegadaian {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 6px;
+        }
+
+        .app-header {
+            background-color: var(--card-white);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.35s ease-out forwards;
+            flex-grow: 1;
+        }
+        .screen.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 22px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+        h2 { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
+        p.subheadline { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-top: 6px; }
+        
+        .card {
+            background: var(--card-white);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary {
+            background-color: var(--tring-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 130, 75, 0.2);
+        }
+        .btn-primary:hover { background-color: var(--tring-green-hover); }
+        .btn-primary:disabled { background-color: #A0A0A0; box-shadow: none; cursor: not-allowed; }
+        
+        .hero-banner { text-align: center; margin-bottom: 24px; padding: 12px 0; }
+        .feature-item { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+        .feature-icon {
+            background-color: rgba(0, 130, 75, 0.1); color: var(--tring-green);
+            width: 38px; height: 38px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0;
+        }
+        .feature-text h3 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .feature-text p { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .select-input, .text-input {
+            width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px;
+            font-size: 13px; background-color: #FAFAFA; color: var(--text-main); outline: none;
+        }
+        .select-input:focus, .text-input:focus { border-color: var(--tring-green); background-color: #fff; }
+        
+        .dynamic-subform {
+            background-color: #F9FBF9; padding: 12px; border-radius: 8px;
+            border-left: 3px solid var(--tring-green); margin-top: 8px; display: none;
+        }
+
+        .identity-strip {
+            background: linear-gradient(90deg, #1f422b, var(--tring-green));
+            color: white; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px;
+        }
+        .identity-strip p { font-size: 11px; opacity: 0.8; }
+        .identity-strip h4 { font-size: 14px; font-weight: 600; margin-top: 2px; }
+
+        /* AREA LIVE PREVIEW KARTU CUSTOM THEME */
+        .gold-preview-card {
+            width: 100%; height: 220px; border-radius: 14px; position: relative;
+            padding: 16px; display: flex; flex-direction: column; justify-content: space-between;
+            color: #333; box-shadow: var(--shadow-premium); overflow: hidden;
+            transition: all 0.4s ease; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%);
+        }
+        
+        .card-bg-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.15; font-size: 70px; display: flex; align-items: center; justify-content: center; user-select: none; }
+        .card-content-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-embed-logo { scale: 0.75; transform-origin: top left; }
+        .card-speech-area { max-width: 60%; }
+        .card-speech-title { font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px; }
+        .card-speech-desc { font-size: 9px; line-height: 1.4; font-weight: 500; }
+
+        .gold-bar-holder {
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 3;
+        }
+        
+        .physical-gold-bar {
+            background: linear-gradient(135deg, #FFF6D6 0%, #D4AF37 40%, #AA7C11 75%, #F3E5AB 100%);
+            border-radius: 3px; box-shadow: 2px 4px 10px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255,255,255,0.6);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+            display: flex; align-items: center; justify-content: center; width: 22px; height: 35px;
+        }
+        .physical-gold-bar::before { content: '⚖️'; font-size: 10px; opacity: 0.4; }
+        .gold-bar-label { font-size: 10px; font-weight: 700; background: rgba(0,0,0,0.8); color: white; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .financial-flex { display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px; }
+        .detail-item { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #F0F0F0; }
+        .detail-item .label { color: var(--text-muted); }
+        .detail-item .val { font-weight: 600; text-align: right; }
+        .total-pay-box { background-color: rgba(0, 130, 75, 0.05); border: 1px solid rgba(0, 130, 75, 0.15); padding: 12px; border-radius: 8px; margin-top: 12px; }
+
+        .success-wrapper { text-align: center; padding: 20px 0; }
+        .success-icon { width: 60px; height: 60px; background-color: var(--tring-green); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px; }
+
+        .tracking-meta-header { text-align: center; background-color: var(--tring-green); color: white; border: none; padding: 18px; }
+        .tracking-meta-header p { font-size: 11px; opacity: 0.85; }
+        .tracking-meta-header h3 { font-size: 18px; font-weight: 700; margin-top: 4px; color: var(--tring-yellow); }
+
+        .v-timeline { position: relative; padding-left: 28px; display: flex; flex-direction: column; margin-top: 10px; }
+        .v-timeline::before { content: ''; position: absolute; left: 8px; top: 12px; bottom: 12px; width: 2px; background-color: var(--border-color); }
+
+        .vt-item { position: relative; margin-bottom: 24px; transition: all 0.3s ease; }
+        .vt-node { position: absolute; left: -24px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background-color: var(--border-color); border: 3px solid var(--card-white); z-index: 2; }
+        
+        .vt-item.completed { opacity: 0.85; }
+        .vt-item.completed .vt-node { background-color: var(--tring-green); }
+        .vt-item.active { opacity: 1; }
+        .vt-item.active .vt-node { background-color: var(--tring-green); border-color: rgba(0, 130, 75, 0.25); outline: 3px solid var(--tring-green); }
+        .vt-item.pending { opacity: 0.45; }
+
+        .vt-card { background: var(--card-white); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; box-shadow: var(--shadow-light); }
+        .vt-item.active .vt-card { border-color: var(--tring-green); box-shadow: 0 4px 15px rgba(0, 130, 75, 0.08); }
+        
+        .vt-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+        .vt-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .vt-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background-color: #EEE; color: var(--text-muted); }
+        
+        .vt-item.completed .vt-badge { background-color: var(--tring-green); color: white; }
+        .vt-item.active .vt-badge { background-color: rgba(0, 130, 75, 0.12); color: var(--tring-green); }
+        
+        .vt-time { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; display: flex; flex-direction: column; gap: 1px; }
+        .vt-desc { font-size: 12px; line-height: 1.4; color: var(--text-main); }
+
+        .vt-item.delayed .vt-node { background-color: var(--danger-color); outline: 3px solid var(--danger-color); }
+        .vt-item.delayed .vt-card { border-color: var(--danger-color); background-color: #FFF8F8; }
+        .vt-item.delayed .vt-badge { background-color: var(--danger-color); color: white; }
+        .vt-item.delayed .vt-desc { color: var(--danger-color); font-weight: 600; }
+
+        #booking-box { display: none; margin-top: 14px; background: #F4FBF7; border: 1px dashed var(--tring-green); padding: 14px; border-radius: 8px; }
+        #barcode-box { display: none; text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border-color); }
+        .barcode-holder { background: white; padding: 16px 8px; border-radius: 8px; border: 1px solid var(--border-color); display: inline-block; margin-top: 10px; width: 100%; }
+
+        .simulation-dock {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 460px; background-color: #1A1A1A; color: #FFF;
+            padding: 12px 10px; z-index: 999; box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; gap: 8px; align-items: center;
+            border-top-left-radius: 12px; border-top-right-radius: 12px;
+        }
+        .sim-headline { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--tring-yellow); letter-spacing: 0.5px; }
+        .sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
+        .sim-btn { background-color: #333; color: white; border: 1px solid #555; padding: 8px 4px; font-size: 11px; font-weight: 600; border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .sim-btn:hover { background-color: #444; border-color: #666; }
+        .sim-btn.danger-action { background-color: var(--danger-color); border-color: #B71C1C; }
+    </style>
+</head>
+<body>
+
+<div class="phone-wrapper">
+    <div class="app-header">
+        <div class="tring-logo-container">
+            <div class="tring-brand">Tring!<div class="tring-dots"><span class="dot-green"></span><span class="dot-yellow"></span></div></div>
+            <div class="by-pegadaian">by Pegadaian</div>
+        </div>
+    </div>
+
+    <div id="screen-landing" class="screen active">
+        <div class="hero-banner">
+            <h1>Cetak Emas Fisik Kamu Hanya di Tring!</h1>
+            <p class="subheadline">Emas fisik bersertifikat dengan proses yang mudah, aman, dan transparan.</p>
+        </div>
+        
+        <div class="card">
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <div class="feature-text">
+                    <h3>Emas Bersertifikat</h3>
+                    <p>Emas 24 karat dari mitra penyedia emas terpercaya dan bersertifikat resmi.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <div class="feature-text">
+                    <h3>Ambil Tanpa Ribet</h3>
+                    <p>Dapat diambil melalui Cabang Pegadaian, Outlet Galeri 24, ATM Emas, maupun layanan antar rumah.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <div class="feature-text">
+                    <h3>Bisa Digadaikan</h3>
+                    <p>Emas fisik dapat digadaikan kembali saat membutuhkan dana tunai.</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary" style="margin-top: auto;" onclick="navigateTo('screen-form')">Ambil Fisik Sekarang</button>
+    </div>
+
+    <div id="screen-form" class="screen">
+        <div class="identity-strip">
+            <p>REKENING EMAS NASABAH</p>
+            <h4>Muhammad Reza Hidayat Saputra</h4>
+            <p style="opacity:0.9; margin-top:2px;">No. Rek: 710012345678</p>
+        </div>
+
+        <h2>Form Pengajuan Ambil Fisik</h2>
+        
+        <div class="form-group">
+            <label>Metode Pengambilan</label>
+            <select class="select-input" id="input-metode" onchange="handleMetodeChange()">
+                <option value="" disabled selected>-- Pilih Metode Pengambilan --</option>
+                <option value="Ambil di Cabang Pegadaian">Ambil di Cabang Pegadaian</option>
+                <option value="Ambil di Outlet Galeri 24">Ambil di Outlet Galeri 24</option>
+                <option value="Ambil di ATM Emas">Ambil di ATM Emas</option>
+                <option value="Antar ke Rumah">Antar ke Rumah</option>
+            </select>
+        </div>
+
+        <div id="subform-cabang" class="dynamic-subform">
+            <label>Pilih Cabang Pegadaian</label>
+            <select class="select-input" id="select-cabang-option" onchange="validateFormState()">
+                <option value="" disabled selected>-- Pilih Lokasi Cabang --</option>
+                <option value="Pegadaian Antang">Pegadaian Antang</option>
+                <option value="Pegadaian Makassar Utama">Pegadaian Makassar Utama</option>
+                <option value="Pegadaian Maros">Pegadaian Maros</option>
+            </select>
+        </div>
+        <div id="subform-galeri" class="dynamic-subform">
+            <label>Pilih Outlet Galeri 24</label>
+            <select class="select-input" id="select-galeri-option" onchange="validateFormState()">
+                <option value="" disabled selected>-- Pilih Outlet Galeri 24 --</option>
+                <option value="Galeri 24 Mall Ratu Indah">Galeri 24 Mall Ratu Indah</option>
+                <option value="Galeri 24 Panakkukang">Galeri 24 Panakkukang</option>
+            </select>
+        </div>
+        <div id="subform-atm" class="dynamic-subform">
+            <label>Pilih Lokasi ATM Emas</label>
+            <select class="select-input" id="select-atm-option" onchange="validateFormState()">
+                <option value="" disabled selected>-- Pilih Lokasi ATM --</option>
+                <option value="ATM Emas Kantor Wilayah VI Mks">ATM Emas Kantor Wilayah VI Mks</option>
+            </select>
+        </div>
+        <div id="subform-antar" class="dynamic-subform">
+            <label style="margin-bottom:4px;">Alamat Lengkap</label>
+            <input type="text" class="text-input" id="input-alamat" placeholder="Contoh: Jl. Hertasning No. 45" oninput="validateFormState()" style="margin-bottom:8px;">
+            <label style="margin-bottom:4px;">Kota/Kabupaten</label>
+            <input type="text" class="text-input" id="input-kota" placeholder="Contoh: Makassar" oninput="validateFormState()" style="margin-bottom:8px;">
+            <label style="margin-bottom:4px;">Kode Pos</label>
+            <input type="text" class="text-input" id="input-kodepos" placeholder="Contoh: 90222" oninput="validateFormState()" style="margin-bottom:8px;">
+            <label style="margin-bottom:4px;">Nomor HP Penerima</label>
+            <input type="text" class="text-input" id="input-hp" placeholder="Contoh: 081234567890" oninput="validateFormState()">
+            <div class="financial-flex" style="margin-top:8px; font-weight:600; color:var(--tring-green);">
+                <span>Simulasi Biaya Kirim:</span><span>Rp25.000</span>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top:12px;">
+            <label>Merk Emas</label>
+            <select class="select-input" id="input-merk" onchange="handleMerkChange()">
+                <option value="" disabled selected>-- Pilih Merk Emas --</option>
+                <option value="Galeri 24">Galeri 24 (Tersedia Custom Kemasan)</option>
+                <option value="Antam">Antam</option>
+                <option value="Lotus Archi">Lotus Archi</option>
+                <option value="UBS">UBS</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Berat Emas (Denominasi)</label>
+            <select class="select-input" id="input-berat" onchange="updateCardPreview()">
+                <option value="" disabled selected>-- Pilih Berat Emas --</option>
+                <option value="1 Gram">1 Gram</option>
+                <option value="2 Gram">2 Gram</option>
+                <option value="5 Gram">5 Gram</option>
+                <option value="10 Gram">10 Gram</option>
+                <option value="25 Gram">25 Gram</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="form-group-kemasan" style="display: none;">
+            <label>Tema Kemasan Kartu (Eksklusif Galeri 24)</label>
+            <select class="select-input" id="input-tema" onchange="updateCardPreview()">
+                <option value="Custom Polos" selected>Custom Polos (Premium Plain)</option>
+                <option value="Graduation">Graduation (Kelulusan)</option>
+                <option value="Idul Fitri">Idul Fitri (Lebaran)</option>
+                <option value="Imlek">Imlek (Chinese New Year)</option>
+                <option value="Natal">Natal (Christmas)</option>
+                <option value="Wedding">Wedding (Pernikahan)</option>
+                <option value="Ulang Tahun">Ulang Tahun (Birthday)</option>
+            </select>
+        </div>
+
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px;">Live Preview Kartu Emas Resmi Tring!</label>
+        <div id="gold-card-visual" class="gold-preview-card">
+            <div class="card-bg-overlay" id="card-overlay-style">✨</div>
+            <div class="card-content-inner">
+                <div class="card-embed-logo">
+                    <div class="tring-brand" id="card-dynamic-logo-color" style="font-size:16px;">Tring!<div class="tring-dots" style="top:-4px;"><span class="dot-green" style="width:3px;height:3px;"></span><span class="dot-yellow" style="width:3px;height:3px;"></span></div></div>
+                </div>
+                
+                <div class="card-speech-area">
+                    <div class="card-speech-title" id="preview-speech-title">-</div>
+                    <div class="card-speech-desc" id="preview-speech-desc">Silakan pilih merk, berat, dan tema emas terlebih dahulu.</div>
+                </div>
+
+                <div class="gold-bar-holder">
+                    <div class="physical-gold-bar" id="gold-bar-dimension"></div>
+                    <div class="gold-bar-label" id="preview-gold-weight">0g</div>
+                </div>
+                
+                <div style="font-size:8px; font-weight:bold; opacity:0.6; letter-spacing:0.5px;" id="preview-brand-stamp">PRODUCT STANDARD</div>
+            </div>
+        </div>
+
+        <div class="card" style="background:#FAFAFA; padding:12px;">
+            <label style="font-weight:600; font-size:12px; display:block; margin-bottom:4px;">Kode Promo</label>
+            <p style="font-size:12px; color:var(--text-muted); font-style:italic;">Belum Ada Promo Tersedia</p>
+            
+            <div class="financial-flex" style="margin-top:10px; border-top:1px solid #EAEAEA; padding-top:8px;">
+                <span>Tukar Poin Tring! (Tersedia: 150)</span>
+                <label style="display:flex; gap:4px; align-items:center; font-weight:600;">
+                    <input type="checkbox" id="check-poin" onchange="updateCardPreview()"> Gunakan 50 Poin
+                </label>
+            </div>
+            <div id="poin-detail-row" class="financial-flex" style="font-size:11px; color:var(--tring-green); display:none;">
+                <span>Potongan Poin: 50 Poin</span>
+                <span>Nilai Diskon: -Rp50.000</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Metode Pembayaran</label>
+            <select class="select-input" id="input-payment" onchange="validateFormState()">
+                <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
+                <option value="BRI VA">Virtual Account - BRI VA</option>
+                <option value="Mandiri VA">Virtual Account - Mandiri VA</option>
+                <option value="BNI VA">Virtual Account - BNI VA</option>
+                <option value="BCA VA">Virtual Account - BCA VA</option>
+                <option value="DANA">Instan - DANA</option>
+                <option value="OVO">Instan - OVO</option>
+            </select>
+        </div>
+
+        <button class="btn-primary" id="btn-submit-form" disabled onclick="processFormSubmission()">Lanjutkan Konfirmasi</button>
+    </div>
+
+    <div id="screen-confirm" class="screen">
+        <h2>Konfirmasi Pengajuan</h2>
+        <p class="subheadline" style="margin-bottom:16px;">Periksa kembali seluruh detail transaksi cetak emas fisik Anda.</p>
+
+        <div class="card">
+            <h3 style="font-size:13px; color:var(--tring-green); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">Informasi Pengambilan</h3>
+            <div class="detail-item"><span class="label">Nama Nasabah</span><span class="val">Muhammad Reza Hidayat Saputra</span></div>
+            <div class="detail-item"><span class="label">No. Rekening Emas</span><span class="val">710012345678</span></div>
+            <div class="detail-item"><span class="label">Metode Pengambilan</span><span class="val" id="conf-metode"></span></div>
+            <div class="detail-item"><span class="label">Lokasi</span><span class="val" id="conf-lokasi"></span></div>
+        </div>
+
+        <div class="card">
+            <h3 style="font-size:13px; color:var(--tring-green); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">Spesifikasi Cetak</h3>
+            <div class="detail-item"><span class="label">Merk Emas</span><span class="val" id="conf-merk"></span></div>
+            <div class="detail-item"><span class="label">Berat Emas</span><span class="val" id="conf-berat"></span></div>
+            <div class="detail-item"><span class="label">Tema Kemasan Kartu</span><span class="val" id="conf-tema"></span></div>
+            <div class="detail-item"><span class="label">Metode Pembayaran</span><span class="val" id="conf-payment"></span></div>
+        </div>
+
+        <div class="card">
+            <h3 style="font-size:13px; color:var(--text-main); margin-bottom:10px;">Rincian Biaya</h3>
+            <div class="detail-item"><span class="label">Biaya Cetak</span><span class="val" id="cost-cetak"></span></div>
+            <div class="detail-item"><span class="label">Biaya Pengiriman</span><span class="val" id="cost-ongkir">Rp0</span></div>
+            <div class="detail-item"><span class="label">Biaya Layanan</span><span class="val">Rp5.000</span></div>
+            <div class="detail-item"><span class="label">Potongan Poin</span><span class="val" id="cost-poin">Rp0</span></div>
+            
+            <div class="total-pay-box financial-flex">
+                <span style="font-weight:700; color:var(--text-main);">Total Pembayaran</span>
+                <span style="font-weight:700; color:var(--tring-green); font-size:16px;" id="cost-total"></span>
+            </div>
+        </div>
+
+        <button class="btn-primary" onclick="executePaymentMock()">Bayar Sekarang</button>
+    </div>
+
+    <div id="screen-success" class="screen" style="justify-content:center;">
+        <div class="success-wrapper">
+            <div class="success-icon">✓</div>
+            <h1>Pembayaran Berhasil!</h1>
+            <p class="subheadline" style="margin-bottom:24px;">Pembayaran Anda telah sukses diverifikasi oleh sistem Tring!</p>
+        </div>
+
+        <div class="card" style="background:#FAFAFA;">
+            <div class="detail-item"><span class="label">No. Transaksi</span><span class="val" style="font-family:monospace;">TRX-AFE-20260612-0089</span></div>
+            <div class="detail-item"><span class="label">Tanggal Pembayaran</span><span class="val">12 Juni 2026</span></div>
+            <div class="detail-item"><span class="label">Estimasi Penyelesaian</span><span class="val" style="color:var(--tring-green); font-weight:700;">6 Juli 2026</span></div>
+        </div>
+
+        <button class="btn-primary" style="margin-top:16px;" onclick="navigateTo('screen-tracking')">Pantau Emasmu di Sini</button>
+    </div>
+
+    <div id="screen-tracking" class="screen">
+        <div class="card tracking-meta-header">
+            <p>ESTIMASI AMBIL FISIK SELESAI</p>
+            <h3>6 Juli 2026</h3>
+        </div>
+
+        <div class="card" style="background:#F9FBF9; border:1px solid rgba(0, 130, 75, 0.15); padding:12px;">
+            <div class="financial-flex" style="font-size:11px; font-weight:600;"><span id="track-summary-merk-berat">-</span><span id="track-summary-lokasi">-</span></div>
+        </div>
+
+        <h2>Progres Ambil Fisik Emas</h2>
+        
+        <div class="v-timeline">
+            <div class="vt-item" id="track-stage-5">
+                <div class="vt-node"></div>
+                <div class="vt-card">
+                    <div class="vt-header-row">
+                        <span class="vt-title">Emas Sudah Diambil</span>
+                        <span class="vt-badge" id="vt-badge-5">Menunggu</span>
+                    </div>
+                    <div class="vt-time" id="vt-time-5">
+                        <span>Waktu Pengambilan: Menyesuaikan kedatangan</span>
+                    </div>
+                    <div class="vt-desc">Emas telah berhasil diserahkan dan diambil oleh nasabah. Proses transaksi telah selesai.</div>
+                </div>
+            </div>
+
+            <div class="vt-item" id="track-stage-4">
+                <div class="vt-node"></div>
+                <div class="vt-card">
+                    <div class="vt-header-row">
+                        <span class="vt-title">Emas Sudah Dapat Diambil</span>
+                        <span class="vt-badge" id="vt-badge-4">Menunggu</span>
+                    </div>
+                    <div class="vt-time">
+                        <span>Estimasi: 6 Juli 2026</span>
+                    </div>
+                    <div class="vt-desc">Emas telah tiba di cabang tujuan dan siap untuk diambil.</div>
+
+                    <div id="booking-box">
+                        <h4 style="font-size:12px; margin-bottom:8px; color:var(--tring-green);">Booking Jadwal Kedatangan</h4>
+                        <div class="form-group" style="margin-bottom:8px;">
+                            <label style="font-size:10px;">Pilih Tanggal</label>
+                            <select class="select-input" id="book-date-input" style="padding:6px; font-size:12px;">
+                                <option value="7 Juli 2026">7 Juli 2026</option>
+                                <option value="8 Juli 2026">8 Juli 2026</option>
+                                <option value="9 Juli 2026">9 Juli 2026</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:8px;">
+                            <label style="font-size:10px;">Pilih Jam</label>
+                            <select class="select-input" id="book-time-input" style="padding:6px; font-size:12px;">
+                                <option value="09.00">09.00 WIB</option>
+                                <option value="10.00">10.00 WIB</option>
+                                <option value="11.00">11.00 WIB</option>
+                                <option value="13.00">13.00 WIB</option>
+                                <option value="14.00">14.00 WIB</option>
+                                <option value="15.00">15.00 WIB</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" style="padding:8px; font-size:12px;" onclick="confirmBookingSlot()">Konfirmasi Jadwal Booking</button>
+                    </div>
+
+                    <div id="barcode-box">
+                        <h4 style="font-size:12px; color:var(--tring-green); margin-bottom:2px;">Kode Pengambilan Digital</h4>
+                        <p style="font-size:10px; color:var(--text-muted);">Tunjukkan barcode ini ke petugas</p>
+                        <div class="barcode-holder">
+                            <svg id="canvas-barcode1d"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vt-item" id="track-stage-3">
+                <div class="vt-node"></div>
+                <div class="vt-card">
+                    <div class="vt-header-row">
+                        <span class="vt-title">Emas Dikirim ke Cabang</span>
+                        <span class="vt-badge" id="vt-badge-3">Menunggu</span>
+                    </div>
+                    <div class="vt-time">
+                        <span>Estimasi Mulai: 1 Juli 2026</span>
+                        <span>Estimasi Selesai: 5 Juli 2026</span>
+                    </div>
+                    <div class="vt-desc">Emas Anda sedang dalam perjalanan menuju cabang yang dipilih untuk pengambilan.</div>
+                </div>
+            </div>
+
+            <div class="vt-item" id="track-stage-2">
+                <div class="vt-node"></div>
+                <div class="vt-card">
+                    <div class="vt-header-row">
+                        <span class="vt-title">Emas Sedang Diproses</span>
+                        <span class="vt-badge" id="vt-badge-2">Menunggu</span>
+                    </div>
+                    <div class="vt-time">
+                        <span>Estimasi Mulai: 13 Juni 2026</span>
+                        <span>Estimasi Selesai: 30 Juni 2026</span>
+                    </div>
+                    <div class="vt-desc">Pesanan emas Anda sedang dalam proses penyiapan.</div>
+                </div>
+            </div>
+
+            <div class="vt-item" id="track-stage-1">
+                <div class="vt-node"></div>
+                <div class="vt-card">
+                    <div class="vt-header-row">
+                        <span class="vt-title">Pembayaran Berhasil</span>
+                        <span class="vt-badge" id="vt-badge-1">Selesai</span>
+                    </div>
+                    <div class="vt-time">
+                        <span>Waktu: 12 Juni 2026, 09.15 WIB</span>
+                    </div>
+                    <div class="vt-desc">Pembayaran Anda telah berhasil diterima dan pesanan emas sedang dipersiapkan untuk diproses.</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="btn-cs-escalation" style="background-color:#555; display:none; margin-top:15px;" onclick="alert('Menghubungkan ke Customer Service Tring! via WhatsApp...')">Hubungi Customer Service</button>
+    </div>
+
+    <div class="simulation-dock">
+        <div class="sim-headline">Panel Kontrol Simulasi Alur Status (Demo Pengujian)</div>
+        <div class="sim-grid">
+            <button class="sim-btn" onclick="simulateTrackingState(1)">Set Tahap 1</button>
+            <button class="sim-btn" onclick="simulateTrackingState(2)">Set Tahap 2</button>
+            <button class="sim-btn" onclick="simulateTrackingState(3)">Set Tahap 3</button>
+            <button class="sim-btn" onclick="simulateTrackingState(4)">Set Tahap 4</button>
+            <button class="sim-btn" onclick="simulateTrackingState(5)">Set Tahap 5</button>
+            <button class="sim-btn danger-action" onclick="simulateSmartEscalation()">Simulasi Terlambat</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State Management Core
+    const transactionData = {
+        namaNasabah: "Muhammad Reza Hidayat Saputra",
+        nomorRekening: "710012345678",
+        metodePengambilan: "",
+        lokasiPengambilan: "",
+        merkEmas: "",
+        beratEmas: "",
+        temaKemasan: "Custom Polos", 
+        metodePembayaran: "",
+        biayaCetak: 0,
+        biayaPengiriman: 0,
+        potonganPoin: 0,
+        totalPembayaran: 0,
+        jadwalBooking: "",
+        barcodeValue: "AFE-MKS-2026-001245",
+        currentState: 1
+    };
+
+    // LOGIKA DINAMIS DESAIN BERDASARKAN TEMA KUSTOMISASI (GALERI 24)
+    const temaStyles = {
+        "Imlek": { 
+            title: "🏮 Lunar Celebration", 
+            desc: "Desain mewah edisi khusus Tahun Baru Imlek dengan tekstur naga, lampion keberuntungan, dan aksen emas kemakmuran.", 
+            bg: "linear-gradient(135deg, #B71C1C 0%, #D32F2F 50%, #880E4F 100%)", 
+            icon: "🏮", textColor: "#FFF", logoColor: "#FFCB05"
+        },
+        "Natal": { 
+            title: "🎄 Christmas Magic", 
+            desc: "Edisi Damai Natal dengan perpaduan latar merah beludru premium, siluet pohon natal, kepingan salju, dan kehangatan keluarga.", 
+            bg: "linear-gradient(135deg, #C62828 0%, #B71C1C 60%, #1B5E20 100%)", 
+            icon: "🎄", textColor: "#FFF", logoColor: "#FFF"
+        },
+        "Idul Fitri": { 
+            title: "🌙 Berkah Fitri", 
+            desc: "Edisi Lebaran bernuansa hijau khusyuk dengan ornamen kubah masjid, ketupat, dan guratan garis geometris islami berlapis emas.", 
+            bg: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 70%, #C29B38 100%)", 
+            icon: "🌙", textColor: "#FFF", logoColor: "#FFCB05"
+        },
+        "Graduation": { 
+            title: "🎓 Class of 2026", 
+            desc: "Apresiasi pencapaian akademik terbaik. Dilengkapi ilustrasi topi toga minimalis, ijazah, dan pita laurel emas.", 
+            bg: "linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #001233 100%)", 
+            icon: "🎓", textColor: "#FFF", logoColor: "#FFCB05"
+        },
+        "Wedding": { 
+            title: "💍 Eternal Love", 
+            desc: "Desain selembut sutra putih mutiara dengan ukiran mawar timbul eksklusif untuk melambangkan ikatan suci pernikahan abadi.", 
+            bg: "linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 60%, #E0E0E0 100%)", 
+            icon: "💍", textColor: "#333", logoColor: "#00824B"
+        },
+        "Ulang Tahun": { 
+            title: "🎂 Special Day Gift", 
+            desc: "Penuh keceriaan dan warna positif. Ilustrasi balon udara, konfeti pesta, dan ucapan ulang tahun terbaik.", 
+            bg: "linear-gradient(135deg, #EC407A 0%, #F48FB1 100%)", 
+            icon: "🎂", textColor: "#FFF", logoColor: "#FFF"
+        },
+        "Custom Polos": { 
+            title: "✨ Premium Card", 
+            desc: "Desain kartu standar minimalis dengan pola garis korporat modern bersinar, memberikan kesan eksklusif dan timeless.", 
+            bg: "linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%)", 
+            icon: "✨", textColor: "#333", logoColor: "#00824B"
+        }
+    };
+
+    const dimensiEmas = {
+        "1 Gram": { w: "22px", h: "35px" },
+        "2 Gram": { w: "28px", h: "44px" },
+        "5 Gram": { w: "36px", h: "56px" },
+        "10 Gram": { w: "45px", h: "70px" },
+        "25 Gram": { w: "55px", h: "88px" }
+    };
+
+    const biayaCetakPeta = { "1 Gram": 90000, "2 Gram": 120000, "5 Gram": 220000, "10 Gram": 335000, "25 Gram": 750000 };
+
+    function navigateTo(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        window.scrollTo(0,0);
+        if (screenId === 'screen-tracking') simulateTrackingState(transactionData.currentState);
+    }
+
+    function handleMetodeChange() {
+        const m = document.getElementById('input-metode').value;
+        transactionData.metodePengambilan = m;
+
+        document.getElementById('subform-cabang').style.display = 'none';
+        document.getElementById('subform-galeri').style.display = 'none';
+        document.getElementById('subform-atm').style.display = 'none';
+        document.getElementById('subform-antar').style.display = 'none';
+
+        if (m === "Ambil di Cabang Pegadaian") { document.getElementById('subform-cabang').style.display = 'block'; transactionData.biayaPengiriman = 0; }
+        else if (m === "Ambil di Outlet Galeri 24") { document.getElementById('subform-galeri').style.display = 'block'; transactionData.biayaPengiriman = 0; }
+        else if (m === "Ambil di ATM Emas") { document.getElementById('subform-atm').style.display = 'block'; transactionData.biayaPengiriman = 0; }
+        else if (m === "Antar ke Rumah") { document.getElementById('subform-antar').style.display = 'block'; transactionData.biayaPengiriman = 25000; }
+        
+        validateFormState();
+    }
+
+    function handleMerkChange() {
+        const brand = document.getElementById('input-merk').value;
+        transactionData.merkEmas = brand;
+        const kemasanGroup = document.getElementById('form-group-kemasan');
+
+        if (brand === "Galeri 24") {
+            kemasanGroup.style.display = 'block';
+            transactionData.temaKemasan = document.getElementById('input-tema').value;
+        } else {
+            kemasanGroup.style.display = 'none';
+            transactionData.temaKemasan = "Custom Polos";
+        }
+        updateCardPreview();
+    }
+
+    function updateCardPreview() {
+        const berat = document.getElementById('input-berat').value;
+        const brand = transactionData.merkEmas;
+        const usePoin = document.getElementById('check-poin').checked;
+
+        if(!brand || !berat) return;
+
+        transactionData.beratEmas = berat;
+        transactionData.biayaCetak = biayaCetakPeta[berat];
+        transactionData.potonganPoin = usePoin ? 50000 : 0;
+        transactionData.totalPembayaran = transactionData.biayaCetak + transactionData.biayaPengiriman + 5000 - transactionData.potonganPoin;
+
+        if(brand === "Galeri 24") {
+            transactionData.temaKemasan = document.getElementById('input-tema').value;
+        }
+
+        // Jalankan Update Gaya Visual Card Preview secara Real-Time
+        const currentStyle = temaStyles[transactionData.temaKemasan];
+        const cardVisual = document.getElementById('gold-card-visual');
+        const overlayVisual = document.getElementById('card-overlay-style');
+        const logoBrandText = document.getElementById('card-dynamic-logo-color');
+        
+        // Manipulasi Warna & Elemen Berdasarkan Tema yang Dipilih
+        cardVisual.style.background = currentStyle.bg;
+        cardVisual.style.color = brand === "Galeri 24" ? currentStyle.textColor : "#333";
+        overlayVisual.innerText = brand === "Galeri 24" ? currentStyle.icon : "⚖️";
+        logoBrandText.style.color = brand === "Galeri 24" ? currentStyle.logoColor : "#00824B";
+
+        document.getElementById('preview-speech-title').innerText = brand === "Galeri 24" ? currentStyle.title : "STANDARD BOX";
+        document.getElementById('preview-speech-desc').innerText = brand === "Galeri 24" ? currentStyle.desc : `Kemasan Logam Mulia Klasik Resmi Bersertifikat PT ${brand.toUpperCase()}.`;
+        document.getElementById('preview-gold-weight').innerText = berat.replace(" Gram", "g");
+        document.getElementById('preview-brand-stamp').innerText = `OFFICIAL PRODUCT ${brand.toUpperCase()}`;
+
+        // Atur Dimensi Fisik Batangan Emas
+        const barDim = dimensiEmas[berat];
+        const goldBarElement = document.getElementById('gold-bar-dimension');
+        goldBarElement.style.width = barDim.w;
+        goldBarElement.style.height = barDim.h;
+
+        document.getElementById('poin-detail-row').style.display = usePoin ? 'flex' : 'none';
+        validateFormState();
+    }
+
+    function validateFormState() {
+        const m = document.getElementById('input-metode').value;
+        const brand = document.getElementById('input-merk').value;
+        const berat = document.getElementById('input-berat').value;
+        const payment = document.getElementById('input-payment').value;
+        let locationFilled = false;
+
+        if (m === "Ambil di Cabang Pegadaian" && document.getElementById('select-cabang-option').value) locationFilled = true;
+        if (m === "Ambil di Outlet Galeri 24" && document.getElementById('select-galeri-option').value) locationFilled = true;
+        if (m === "Ambil di ATM Emas" && document.getElementById('select-atm-option').value) locationFilled = true;
+        if (m === "Antar ke Rumah" && document.getElementById('input-alamat').value && document.getElementById('input-kota').value) locationFilled = true;
+
+        const isReady = m && brand && berat && payment && locationFilled;
+        document.getElementById('btn-submit-form').disabled = !isReady;
+    }
+
+    function processFormSubmission() {
+        const m = transactionData.metodePengambilan;
+        if (m === "Ambil di Cabang Pegadaian") transactionData.lokasiPengambilan = document.getElementById('select-cabang-option').value;
+        else if (m === "Ambil di Outlet Galeri 24") transactionData.lokasiPengambilan = document.getElementById('select-galeri-option').value;
+        else if (m === "Ambil di ATM Emas") transactionData.lokasiPengambilan = document.getElementById('select-atm-option').value;
+        else if (m === "Antar ke Rumah") transactionData.lokasiPengambilan = document.getElementById('input-alamat').value + ", " + document.getElementById('input-kota').value;
+
+        transactionData.metodePembayaran = document.getElementById('input-payment').value;
+
+        document.getElementById('conf-metode').innerText = transactionData.metodePengambilan;
+        document.getElementById('conf-lokasi').innerText = transactionData.lokasiPengambilan;
+        document.getElementById('conf-merk').innerText = transactionData.merkEmas;
+        document.getElementById('conf-berat').innerText = transactionData.beratEmas;
+        document.getElementById('conf-tema').innerText = transactionData.temaKemasan;
+        document.getElementById('conf-payment').innerText = transactionData.metodePembayaran;
+
+        document.getElementById('cost-cetak').innerText = "Rp" + transactionData.biayaCetak.toLocaleString('id-ID');
+        document.getElementById('cost-ongkir').innerText = "Rp" + transactionData.biayaPengiriman.toLocaleString('id-ID');
+        document.getElementById('cost-poin').innerText = transactionData.potonganPoin > 0 ? "-Rp" + transactionData.potonganPoin.toLocaleString('id-ID') : "Rp0";
+        document.getElementById('cost-total').innerText = "Rp" + transactionData.totalPembayaran.toLocaleString('id-ID');
+
+        navigateTo('screen-confirm');
+    }
+
+    function executePaymentMock() { navigateTo('screen-success'); }
+
+    // TRACKING CORE ENGINE (Fungsi kontrol eksekusi simulasi status)
+    function simulateTrackingState(stage) {
+        transactionData.currentState = stage;
+        document.getElementById('btn-cs-escalation').style.display = 'none';
+
+        document.getElementById('track-summary-merk-berat').innerText = `${transactionData.merkEmas || 'Galeri 24'} - ${transactionData.beratEmas || '1 Gram'} (${transactionData.temaKemasan})`;
+        document.getElementById('track-summary-lokasi').innerText = transactionData.lokasiPengambilan || 'Cabang Belum Dipilih';
+
+        for (let i = 1; i <= 5; i++) {
+            const item = document.getElementById(`track-stage-${i}`);
+            if(!item) continue;
+            const badge = document.getElementById(`vt-badge-${i}`);
+            item.classList.remove('completed', 'active', 'pending', 'delayed');
+
+            if (i < stage) {
+                item.classList.add('completed');
+                if(badge) badge.innerText = "Selesai";
+            } else if (i === stage) {
+                item.classList.add('active');
+                if(badge) badge.innerText = (i === 1) ? "Selesai" : "Dalam Proses";
+            } else {
+                item.classList.add('pending');
+                if(badge) badge.innerText = "Menunggu";
+            }
+        }
+
+        const bookingBox = document.getElementById('booking-box');
+        const barcodeBox = document.getElementById('barcode-box');
+        
+        if (stage < 5) {
+            const badge5 = document.getElementById('vt-badge-5');
+            if(badge5) badge5.innerText = "Menunggu";
+            document.getElementById('vt-time-5').innerHTML = "<span>Waktu Pengambilan: Menyesuaikan kedatangan</span>";
+        }
+
+        if (stage === 4) {
+            if (!transactionData.jadwalBooking) {
+                bookingBox.style.display = 'block';
+                barcodeBox.style.display = 'none';
+            } else {
+                bookingBox.style.display = 'none';
+                barcodeBox.style.display = 'block';
+                render1DBarcode();
+            }
+        } else if (stage === 5) {
+            bookingBox.style.display = 'none';
+            barcodeBox.style.display = 'none';
+            const badge5 = document.getElementById('vt-badge-5');
+            if(badge5) badge5.innerText = "Selesai";
+            const realSchedule = transactionData.jadwalBooking ? transactionData.jadwalBooking : "7 Juli 2026 - Pukul 09.00 WIB";
+            document.getElementById('vt-time-5').innerHTML = `<span>Diambil pada: <strong>${realSchedule}</strong></span>`;
+        } else {
+            if(bookingBox) bookingBox.style.display = 'none';
+            if(barcodeBox) barcodeBox.style.display = 'none';
+        }
+    }
+
+    function simulateSmartEscalation() {
+        const current = transactionData.currentState;
+        if (current === 5) return;
+
+        const activeItem = document.getElementById(`track-stage-${current}`);
+        if(activeItem) {
+            activeItem.classList.add('delayed');
+            const badge = document.getElementById(`vt-badge-${current}`);
+            if(badge) badge.innerText = "Terlambat";
+            activeItem.querySelector('.vt-desc').innerHTML = "Proses sedang ditindaklanjuti secara ekspres oleh petugas internal. Kami memohon maaf atas keterlambatan ini.";
+            document.getElementById('btn-cs-escalation').style.display = 'block';
+        }
+    }
+
+    function confirmBookingSlot() {
+        const d = document.getElementById('book-date-input').value;
+        const t = document.getElementById('book-time-input').value;
+        transactionData.jadwalBooking = `${d} - Pukul ${t} WIB`;
+
+        document.getElementById('booking-box').style.display = 'none';
+        document.getElementById('barcode-box').style.display = 'block';
+        
+        document.getElementById('track-stage-4').querySelector('.vt-desc').innerHTML = `Emas telah siap diambil. Jadwal kedatangan Anda: <strong>${transactionData.jadwalBooking}</strong>`;
+        render1DBarcode();
+    }
+
+    function render1DBarcode() {
+        JsBarcode("#canvas-barcode1d", transactionData.barcodeValue, {
+            format: "CODE128", displayValue: false, width: 2.5, height: 65, lineColor: "#111", margin: 0
+        });
+    }
+</script>
+
+</body>
+</html>
