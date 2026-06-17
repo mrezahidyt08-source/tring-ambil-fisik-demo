@@ -1,0 +1,254 @@
+
+<h2 class="sr-only">Portal HR Self-Service Pegadaian Kanwil VI Makassar — tiga modul: FAQ Database, Quick Tracker, dan Analytics</h2>
+<style>
+.tab-nav{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem;}
+.tab-btn{padding:8px 16px;font-size:13px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--color-text-secondary);cursor:pointer;transition:color .15s,border-color .15s;border-radius:0;}
+.tab-btn.active{color:#085041;border-bottom-color:#1D9E75;font-weight:500;}
+.tab-btn:hover:not(.active){color:var(--color-text-primary);}
+.tab-pane{display:none;}.tab-pane.on{display:block;}
+.chip{padding:4px 12px;border:0.5px solid var(--color-border-secondary);border-radius:20px;font-size:12px;cursor:pointer;background:transparent;color:var(--color-text-secondary);}
+.chip.on{background:#E1F5EE;border-color:#1D9E75;color:#085041;}
+.faq-item{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:8px;overflow:hidden;}
+.faq-q{padding:14px 16px;font-size:13px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--color-text-primary);background:var(--color-background-primary);}
+.faq-q:hover{background:var(--color-background-secondary);}
+.faq-a{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .25s,padding .25s;font-size:13px;color:var(--color-text-secondary);line-height:1.65;}
+.faq-a.on{max-height:300px;padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary);}
+.chev{transition:transform .2s;}
+.chev.on{transform:rotate(180deg);}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;}
+.bc{background:#E1F5EE;color:#085041;}.bg{background:#FAEEDA;color:#633806;}
+.br{background:#EAF3DE;color:#27500A;}.bh{background:#FAECE7;color:#712B13;}
+.bt{background:#EEEDFE;color:#3C3489;}.bu{background:#F1EFE8;color:#444441;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.fg label{font-size:12px;color:var(--color-text-secondary);}
+.trk{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;background:var(--color-background-primary);}
+.sp{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;}
+.sp-p{background:#FAEEDA;color:#633806;}.sp-r{background:#E6F1FB;color:#0C447C;}
+.sp-s{background:#E1F5EE;color:#085041;}.sp-x{background:#FCEBEB;color:#791F1F;}
+.mcard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;}
+.mlabel{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;}
+.mval{font-size:24px;font-weight:500;}
+.msub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px;}
+.ccard{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px;background:var(--color-background-primary);}
+.ctitle{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px;}
+.btn-g{background:#1D9E75;color:#fff;border:none;padding:8px 16px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;font-weight:500;}
+.btn-g:hover{background:#0F6E56;}
+.empty{text-align:center;padding:2rem;color:var(--color-text-tertiary);font-size:13px;}
+</style>
+
+<div style="padding:0.5rem 0 1rem;">
+
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;">
+  <div style="width:38px;height:38px;background:#1D9E75;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+    <i class="ti ti-users" style="color:#fff;font-size:20px;" aria-hidden="true"></i>
+  </div>
+  <div>
+    <div style="font-size:15px;font-weight:500;color:var(--color-text-primary);">HR Self-Service Portal</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">Kanwil VI Makassar · PT Pegadaian</div>
+  </div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="sw('faq',this)"><i class="ti ti-help-circle" style="font-size:14px;margin-right:4px;vertical-align:-2px" aria-hidden="true"></i>FAQ Database</button>
+  <button class="tab-btn" onclick="sw('tracker',this)"><i class="ti ti-clipboard-list" style="font-size:14px;margin-right:4px;vertical-align:-2px" aria-hidden="true"></i>Quick Tracker</button>
+  <button class="tab-btn" onclick="sw('analytics',this)"><i class="ti ti-chart-bar" style="font-size:14px;margin-right:4px;vertical-align:-2px" aria-hidden="true"></i>Analytics</button>
+</div>
+
+<!-- FAQ -->
+<div id="tp-faq" class="tab-pane on">
+  <div style="position:relative;margin-bottom:1rem;">
+    <i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--color-text-tertiary);font-size:16px;" aria-hidden="true"></i>
+    <input id="fsrch" type="text" placeholder="Cari pertanyaan HR..." oninput="flt()" style="padding-left:34px;width:100%;box-sizing:border-box;" />
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem;" id="fchips">
+    <button class="chip on" data-c="all" onclick="cat(this)">Semua</button>
+    <button class="chip" data-c="cuti" onclick="cat(this)">Cuti</button>
+    <button class="chip" data-c="gaji" onclick="cat(this)">Penggajian</button>
+    <button class="chip" data-c="rekrut" onclick="cat(this)">Rekrutmen</button>
+    <button class="chip" data-c="kesehat" onclick="cat(this)">Kesehatan</button>
+    <button class="chip" data-c="training" onclick="cat(this)">Pelatihan</button>
+    <button class="chip" data-c="umum" onclick="cat(this)">Umum</button>
+  </div>
+  <div id="flist"></div>
+  <div id="fempty" class="empty" style="display:none;"><i class="ti ti-search-off" style="font-size:28px;display:block;margin-bottom:8px" aria-hidden="true"></i>Tidak ada FAQ yang cocok.</div>
+</div>
+
+<!-- TRACKER -->
+<div id="tp-tracker" class="tab-pane">
+  <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;background:var(--color-background-primary);">
+    <div style="font-size:13px;font-weight:500;margin-bottom:12px;color:var(--color-text-primary);">Ajukan permintaan HR baru</div>
+    <div class="frow">
+      <div class="fg"><label>Nama karyawan</label><input id="rn" type="text" placeholder="Nama lengkap" /></div>
+      <div class="fg"><label>NIP</label><input id="ri" type="text" placeholder="e.g. 20210001" /></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Jenis permintaan</label>
+        <select id="rt"><option value="">Pilih jenis...</option><option>Cuti</option><option>Lembur</option><option>Koreksi Absensi</option><option>Klaim Kesehatan</option><option>Pelatihan</option><option>Administrasi</option></select>
+      </div>
+      <div class="fg"><label>Prioritas</label>
+        <select id="rp"><option>Normal</option><option>Urgent</option></select>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:12px;"><label>Deskripsi singkat</label><textarea id="rd" rows="2" placeholder="Jelaskan permintaan Anda..."></textarea></div>
+    <button class="btn-g" onclick="addReq()"><i class="ti ti-send" style="font-size:14px;margin-right:4px;vertical-align:-2px" aria-hidden="true"></i>Kirim permintaan</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Daftar permintaan</div>
+    <select id="fstt" onchange="renderT()" style="font-size:12px;padding:4px 8px;">
+      <option value="all">Semua status</option><option>Pending</option><option>Dalam Review</option><option>Selesai</option><option>Ditolak</option>
+    </select>
+  </div>
+  <div id="tlist"></div>
+  <div id="tempty" class="empty" style="display:none;"><i class="ti ti-inbox" style="font-size:28px;display:block;margin-bottom:8px" aria-hidden="true"></i>Belum ada permintaan.</div>
+</div>
+
+<!-- ANALYTICS -->
+<div id="tp-analytics" class="tab-pane">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem;" id="mcards"></div>
+  <div class="ccard">
+    <div class="ctitle"><i class="ti ti-chart-bar" style="font-size:14px;margin-right:4px;vertical-align:-2px" aria-hidden="true"></i>Permintaan per jenis</div>
+    <div style="position:relative;width:100%;height:200px;"><canvas id="chType" role="img" aria-label="Bar chart permintaan HR per jenis">Data permintaan per jenis.</canvas></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="ccard">
+      <div class="ctitle">Status permintaan</div>
+      <div style="position:relative;width:100%;height:180px;"><canvas id="chStat" role="img" aria-label="Donut chart status permintaan">Status permintaan.</canvas></div>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Tren 6 bulan</div>
+      <div style="position:relative;width:100%;height:180px;"><canvas id="chTrend" role="img" aria-label="Line chart tren permintaan 6 bulan">Tren permintaan.</canvas></div>
+    </div>
+  </div>
+  <div style="margin-top:12px;display:flex;justify-content:flex-end;">
+    <button onclick="sendPrompt('Berikan analisis HR dan rekomendasi strategis berdasarkan data tracker di portal HR Self-Service Pegadaian Kanwil VI Makassar ini')">Minta analisis AI ↗</button>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const FAQ=[
+  {c:'cuti',q:'Bagaimana cara mengajukan cuti tahunan?',a:'Pengajuan cuti tahunan dilakukan melalui aplikasi HCM Pegadaian. Login ke portal karyawan, pilih "Cuti & Izin", tentukan jenis dan tanggal cuti. Persetujuan atasan diperlukan minimal 3 hari kerja sebelum cuti dimulai.'},
+  {c:'cuti',q:'Berapa hari jatah cuti tahunan karyawan Pegadaian?',a:'Karyawan yang telah bekerja 12 bulan berhak atas 12 hari cuti tahunan. Karyawan dengan masa kerja lebih dari 5 tahun mendapat tambahan 3 hari. Jatah cuti tidak dapat dikumulasikan lebih dari 1 tahun.'},
+  {c:'cuti',q:'Apa saja jenis cuti selain cuti tahunan?',a:'Tersedia: Cuti Sakit (dengan surat dokter), Cuti Melahirkan (3 bulan ibu / 2 hari ayah), Cuti Menikah (3 hari), Cuti Duka (2–3 hari tergantung hubungan keluarga), dan Cuti Bersama sesuai kalender pemerintah.'},
+  {c:'gaji',q:'Kapan gaji karyawan Pegadaian dibayarkan setiap bulan?',a:'Gaji dibayarkan setiap tanggal 25. Jika tanggal 25 jatuh pada hari libur atau akhir pekan, pembayaran dilakukan pada hari kerja sebelumnya.'},
+  {c:'gaji',q:'Bagaimana cara melihat slip gaji secara digital?',a:'Slip gaji digital dapat diakses melalui ESS (Employee Self-Service) Pegadaian. Login dengan NIP dan password, pilih "Penggajian" > "Slip Gaji". Slip tersedia mulai tanggal 25 setiap bulan.'},
+  {c:'gaji',q:'Apa saja komponen yang termasuk dalam gaji karyawan?',a:'Komponen gaji meliputi: Gaji Pokok, Tunjangan Jabatan, Tunjangan Keluarga, Tunjangan Perumahan, Tunjangan Transport, dan Bonus Kinerja. Potongan meliputi BPJS Kesehatan, BPJS Ketenagakerjaan, dan PPh 21.'},
+  {c:'rekrut',q:'Bagaimana proses rekrutmen internal untuk promosi jabatan?',a:'Rekrutmen internal dilakukan melalui program Promosi Jabatan di portal HCM. Proses meliputi seleksi administrasi, psikotes, wawancara, dan assessment center. Informasi lowongan internal diumumkan melalui portal karyawan.'},
+  {c:'rekrut',q:'Apa syarat mengikuti PFLP (Pegadaian Future Leader Program)?',a:'Syarat PFLP: pendidikan minimal S1, IPK minimal 3.00, usia maksimal 27 tahun (fresh graduate) atau 30 tahun (experienced), sehat jasmani-rohani, dan tidak memiliki catatan pelanggaran disiplin.'},
+  {c:'kesehat',q:'Bagaimana cara mengklaim biaya pengobatan ke BPJS Kesehatan?',a:'Klaim BPJS dilakukan langsung di faskes tingkat 1 yang terdaftar. Untuk rawat inap, bawa kartu BPJS dan KTP. Biaya yang melebihi plafon BPJS dapat diklaim ke HR dengan melampirkan kwitansi asli dan surat keterangan dokter.'},
+  {c:'kesehat',q:'Apa yang harus dilakukan jika kartu BPJS Kesehatan hilang?',a:'Hubungi HR Kanwil VI untuk pelaporan. Kunjungi kantor BPJS Kesehatan terdekat membawa KTP dan surat keterangan kehilangan dari kepolisian. Penggantian kartu membutuhkan waktu 3–5 hari kerja.'},
+  {c:'kesehat',q:'Fasilitas kesehatan apa saja yang ditanggung Pegadaian?',a:'Pegadaian menanggung BPJS Kesehatan untuk karyawan dan keluarga inti (istri/suami dan maksimal 3 anak). Untuk karyawan tertentu tersedia plafon rawat jalan non-BPJS. Detail manfaat tercantum dalam PKB (Perjanjian Kerja Bersama).'},
+  {c:'training',q:'Bagaimana cara mendaftar pelatihan yang diselenggarakan Pegadaian?',a:'Pendaftaran pelatihan melalui Learning Management System (LMS) Pegadaian. Pilih program pelatihan yang relevan, ajukan ke atasan untuk persetujuan, HR Kanwil akan memproses pendaftaran ke Pusdiklat.'},
+  {c:'training',q:'Apakah ada beasiswa pendidikan S2 untuk karyawan Pegadaian?',a:'Pegadaian menyediakan program Bantuan Beasiswa S2 untuk karyawan berprestasi. Syarat: minimal 3 tahun masa kerja, penilaian kinerja "Baik" atau lebih, dan disetujui oleh Kanwil. Informasi melalui Divisi Pengembangan SDM.'},
+  {c:'umum',q:'Bagaimana prosedur pelaporan pelanggaran disiplin karyawan?',a:'Laporan pelanggaran disiplin disampaikan secara tertulis kepada atasan langsung atau HR Kanwil. HR akan melakukan investigasi dan menetapkan sanksi sesuai Peraturan Disiplin Pegadaian, mulai dari teguran lisan hingga PHK.'},
+  {c:'umum',q:'Bagaimana cara mengurus pembaruan data keluarga di HR?',a:'Pembaruan data keluarga (pernikahan, kelahiran anak) harus dilaporkan dalam 30 hari kejadian. Lampirkan dokumen pendukung (akta nikah/kelahiran) ke HR Kanwil. Data keluarga berpengaruh pada tunjangan dan manfaat BPJS.'},
+  {c:'umum',q:'Ke mana harus menghubungi jika ada masalah di portal HCM atau ESS?',a:'Hubungi Help Desk HR Kanwil VI Makassar via email atau telepon yang tertera di portal internal. Untuk masalah teknis sistem, hubungi IT Support Divisi Teknologi Informasi Pegadaian. Jam layanan: Senin–Jumat 08.00–17.00 WITA.'},
+];
+
+const catMap={cuti:'bc',gaji:'bg',rekrut:'br',kesehat:'bh',training:'bt',umum:'bu'};
+const catLabel={cuti:'Cuti',gaji:'Penggajian',rekrut:'Rekrutmen',kesehat:'Kesehatan',training:'Pelatihan',umum:'Umum'};
+let selCat='all';
+
+let reqs=[
+  {id:1,name:'Andi Saputra',nip:'20200015',type:'Cuti',priority:'Normal',desc:'Cuti tahunan 3 hari (19–21 Juni 2025)',status:'Selesai',date:'2025-06-10'},
+  {id:2,name:'Sari Dewi Rahayu',nip:'20210032',type:'Klaim Kesehatan',priority:'Normal',desc:'Klaim biaya rawat jalan anak bulan Mei',status:'Dalam Review',date:'2025-06-12'},
+  {id:3,name:'Budi Hartono',nip:'20190008',type:'Lembur',priority:'Urgent',desc:'Pengajuan lembur audit internal Mei 2025',status:'Pending',date:'2025-06-13'},
+  {id:4,name:'Rina Marlina',nip:'20220051',type:'Pelatihan',priority:'Normal',desc:'Pendaftaran pelatihan Digital Banking Kanwil',status:'Selesai',date:'2025-06-01'},
+  {id:5,name:'Dian Permata',nip:'20180022',type:'Koreksi Absensi',priority:'Normal',desc:'Koreksi absensi masuk tanggal 5 Juni 2025',status:'Pending',date:'2025-06-14'},
+];
+let nxtId=6;
+
+let cType,cStat,cTrend;
+
+function sw(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('active');
+  document.getElementById('tp-'+name).classList.add('on');
+  if(name==='analytics') renderA();
+}
+
+function cat(el){
+  document.querySelectorAll('#fchips .chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  selCat=el.dataset.c;
+  flt();
+}
+
+function flt(){
+  const q=document.getElementById('fsrch').value.toLowerCase();
+  const fl=FAQ.filter(f=>(selCat==='all'||f.c===selCat)&&(!q||f.q.toLowerCase().includes(q)||f.a.toLowerCase().includes(q)));
+  const list=document.getElementById('flist');
+  const empty=document.getElementById('fempty');
+  if(!fl.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=fl.map((f,i)=>`<div class="faq-item"><div class="faq-q" onclick="tog(${i})"><span style="display:flex;align-items:center;gap:8px;"><span class="badge ${catMap[f.c]}">${catLabel[f.c]}</span>${f.q}</span><i class="ti ti-chevron-down chev" id="cv-${i}" aria-hidden="true"></i></div><div class="faq-a" id="fa-${i}">${f.a}</div></div>`).join('');
+}
+
+function tog(i){
+  document.getElementById('fa-'+i).classList.toggle('on');
+  document.getElementById('cv-'+i).classList.toggle('on');
+}
+
+function addReq(){
+  const n=document.getElementById('rn').value.trim();
+  const t=document.getElementById('rt').value;
+  const d=document.getElementById('rd').value.trim();
+  if(!n||!t||!d){alert('Lengkapi nama, jenis permintaan, dan deskripsi.');return;}
+  reqs.unshift({id:nxtId++,name:n,nip:document.getElementById('ri').value.trim()||'–',type:t,priority:document.getElementById('rp').value,desc:d,status:'Pending',date:new Date().toISOString().slice(0,10)});
+  ['rn','ri','rd'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('rt').value='';
+  renderT();
+}
+
+function upd(id,v){
+  const r=reqs.find(x=>x.id===id);
+  if(r)r.status=v;
+  renderT();
+}
+
+function renderT(){
+  const f=document.getElementById('fstt').value;
+  const fl=f==='all'?reqs:reqs.filter(r=>r.status===f);
+  const list=document.getElementById('tlist');
+  const empty=document.getElementById('tempty');
+  if(!fl.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  const smap={'Pending':'sp-p','Dalam Review':'sp-r','Selesai':'sp-s','Ditolak':'sp-x'};
+  const bmap={Cuti:'bc',Lembur:'bg','Klaim Kesehatan':'bh',Pelatihan:'bt','Koreksi Absensi':'bu',Administrasi:'bu'};
+  list.innerHTML=fl.map(r=>`<div class="trk"><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;">${r.name} <span style="font-weight:400;color:var(--color-text-tertiary);font-size:11px;">· ${r.nip}</span></div><div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;flex-wrap:wrap;"><span class="badge ${bmap[r.type]||'bu'}">${r.type}</span>${r.priority==='Urgent'?'<span style="font-size:11px;color:#A32D2D;font-weight:500;"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Urgent</span>':''}</div><div style="font-size:12px;color:var(--color-text-secondary);">${r.desc}</div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:3px;">${r.date}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:100px;"><span class="sp ${smap[r.status]}">${r.status}</span><select style="font-size:11px;padding:2px 4px;" onchange="upd(${r.id},this.value)"><option ${r.status==='Pending'?'selected':''}>Pending</option><option value="Dalam Review" ${r.status==='Dalam Review'?'selected':''}>Dalam Review</option><option value="Selesai" ${r.status==='Selesai'?'selected':''}>Selesai</option><option value="Ditolak" ${r.status==='Ditolak'?'selected':''}>Ditolak</option></select></div></div>`).join('');
+}
+
+function renderA(){
+  const tot=reqs.length;
+  const res=reqs.filter(r=>r.status==='Selesai').length;
+  const pnd=reqs.filter(r=>r.status==='Pending').length;
+  const urg=reqs.filter(r=>r.priority==='Urgent').length;
+  document.getElementById('mcards').innerHTML=`
+    <div class="mcard"><div class="mlabel">Total permintaan</div><div class="mval" style="color:var(--color-text-primary);">${tot}</div><div class="msub">semua waktu</div></div>
+    <div class="mcard"><div class="mlabel">Selesai</div><div class="mval" style="color:#1D9E75;">${res}</div><div class="msub">${Math.round(res/tot*100)}% resolved</div></div>
+    <div class="mcard"><div class="mlabel">Pending</div><div class="mval" style="color:#BA7517;">${pnd}</div><div class="msub">menunggu proses</div></div>
+    <div class="mcard"><div class="mlabel">Urgent</div><div class="mval" style="color:#A32D2D;">${urg}</div><div class="msub">prioritas tinggi</div></div>`;
+
+  const types=['Cuti','Lembur','Koreksi Absensi','Klaim Kesehatan','Pelatihan','Administrasi'];
+  const tcnt=types.map(t=>reqs.filter(r=>r.type===t).length);
+  if(cType)cType.destroy();
+  cType=new Chart(document.getElementById('chType'),{type:'bar',data:{labels:types,datasets:[{label:'Jumlah',data:tcnt,backgroundColor:['#9FE1CB','#FAC775','#D3D1C7','#F5C4B3','#CECBF6','#B5D4F4'],borderColor:['#1D9E75','#BA7517','#888780','#D85A30','#7F77DD','#378ADD'],borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0}},x:{ticks:{font:{size:10}}}}}});
+
+  const sts=['Pending','Dalam Review','Selesai','Ditolak'];
+  const scnt=sts.map(s=>reqs.filter(r=>r.status===s).length);
+  if(cStat)cStat.destroy();
+  cStat=new Chart(document.getElementById('chStat'),{type:'doughnut',data:{labels:sts,datasets:[{data:scnt,backgroundColor:['#FAC775','#B5D4F4','#9FE1CB','#F7C1C1'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}}}});
+
+  const months=['Jan','Feb','Mar','Apr','Mei','Jun'];
+  const trend=[8,12,9,15,11,tot];
+  if(cTrend)cTrend.destroy();
+  cTrend=new Chart(document.getElementById('chTrend'),{type:'line',data:{labels:months,datasets:[{label:'Permintaan',data:trend,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.1)',fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:'#1D9E75'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:5,precision:0}}}}});
+}
+
+flt();
+renderT();
+</script>
