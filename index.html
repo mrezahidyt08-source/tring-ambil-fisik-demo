@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Optimalisasi Layanan Ambil Fisik Emas - Tring! by Pegadaian</title>
+    <!-- JsBarcode CDN untuk Generate Barcode 1D Pengambilan -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
         :root {
@@ -51,52 +52,26 @@
             overflow-x: hidden;
         }
 
-        .tring-logo-container {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            user-select: none;
-        }
-        .tring-brand {
-            font-family: 'Georgia', cursive, sans-serif;
-            font-style: italic;
-            font-weight: 800;
-            font-size: 24px;
-            color: var(--tring-green);
-            position: relative;
-            letter-spacing: -0.5px;
-        }
-        .tring-dots {
-            position: absolute;
-            top: -6px;
-            right: 2px;
-            display: flex;
-            gap: 2px;
-        }
-        .dot-green { width: 5px; height: 5px; background-color: var(--tring-green); border-radius: 50%; }
-        .dot-yellow { width: 5px; height: 5px; background-color: var(--tring-yellow); border-radius: 50%; }
-        .by-pegadaian {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 10px;
-            border-left: 1px solid var(--border-color);
-            padding-left: 6px;
-        }
-
+        /* GAYA BARU UNTUK LOGO ASLI */
         .app-header {
             background-color: var(--card-white);
-            padding: 16px 20px;
+            padding: 12px 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            height: 60px;
+        }
+
+        .tring-official-logo {
+            height: 100%;
+            max-height: 40px;
+            object-fit: contain;
+            display: block;
         }
 
         .screen {
@@ -183,7 +158,19 @@
         
         .card-bg-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.15; font-size: 70px; display: flex; align-items: center; justify-content: center; user-select: none; }
         .card-content-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-embed-logo { scale: 0.75; transform-origin: top left; }
+        
+        /* Modifikasi penempatan logo mini di dalam kartu jaminan agar tetap proporsional */
+        .card-embed-logo { 
+            height: 24px;
+            display: flex;
+            align-items: center;
+        }
+        .card-embed-logo img {
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.15));
+        }
+        
         .card-speech-area { max-width: 60%; }
         .card-speech-title { font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px; }
         .card-speech-desc { font-size: 9px; line-height: 1.4; font-weight: 500; }
@@ -266,13 +253,12 @@
 <body>
 
 <div class="phone-wrapper">
+    <!-- HEADER UTAMA: Menggunakan file logo resmi Tring HD.png -->
     <div class="app-header">
-        <div class="tring-logo-container">
-            <div class="tring-brand">Tring!<div class="tring-dots"><span class="dot-green"></span><span class="dot-yellow"></span></div></div>
-            <div class="by-pegadaian">by Pegadaian</div>
-        </div>
+        <img src="Tring HD.png" alt="Tring! by Pegadaian" class="tring-official-logo">
     </div>
 
+    <!-- SCREEN 1: LANDING PAGE -->
     <div id="screen-landing" class="screen active">
         <div class="hero-banner">
             <h1>Cetak Emas Fisik Kamu Hanya di Tring!</h1>
@@ -306,6 +292,7 @@
         <button class="btn-primary" style="margin-top: auto;" onclick="navigateTo('screen-form')">Ambil Fisik Sekarang</button>
     </div>
 
+    <!-- SCREEN 2: FORM PENGAJUAN -->
     <div id="screen-form" class="screen">
         <div class="identity-strip">
             <p>REKENING EMAS NASABAH</p>
@@ -326,6 +313,7 @@
             </select>
         </div>
 
+        <!-- Dynamic Subforms -->
         <div id="subform-cabang" class="dynamic-subform">
             <label>Pilih Cabang Pegadaian</label>
             <select class="select-input" id="select-cabang-option" onchange="validateFormState()">
@@ -387,6 +375,7 @@
             </select>
         </div>
 
+        <!-- EKSLUSIVITAS KEMASAN STRATEGIS -->
         <div class="form-group" id="form-group-kemasan" style="display: none;">
             <label>Tema Kemasan Kartu (Eksklusif Galeri 24)</label>
             <select class="select-input" id="input-tema" onchange="updateCardPreview()">
@@ -400,12 +389,14 @@
             </select>
         </div>
 
+        <!-- LIVE PREVIEW KARTU EMAS RESMI -->
         <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px;">Live Preview Kartu Emas Resmi Tring!</label>
         <div id="gold-card-visual" class="gold-preview-card">
             <div class="card-bg-overlay" id="card-overlay-style">✨</div>
             <div class="card-content-inner">
-                <div class="card-embed-logo">
-                    <div class="tring-brand" id="card-dynamic-logo-color" style="font-size:16px;">Tring!<div class="tring-dots" style="top:-4px;"><span class="dot-green" style="width:3px;height:3px;"></span><span class="dot-yellow" style="width:3px;height:3px;"></span></div></div>
+                <!-- LOGO EMBED DI DALAM KARTU JAMINAN EMAS -->
+                <div class="card-embed-logo" id="card-embed-logo-container">
+                    <img src="Tring HD.png" alt="Tring! Logo" id="card-dynamic-logo">
                 </div>
                 
                 <div class="card-speech-area">
@@ -454,6 +445,7 @@
         <button class="btn-primary" id="btn-submit-form" disabled onclick="processFormSubmission()">Lanjutkan Konfirmasi</button>
     </div>
 
+    <!-- SCREEN 3: KONFIRMASI -->
     <div id="screen-confirm" class="screen">
         <h2>Konfirmasi Pengajuan</h2>
         <p class="subheadline" style="margin-bottom:16px;">Periksa kembali seluruh detail transaksi cetak emas fisik Anda.</p>
@@ -490,6 +482,7 @@
         <button class="btn-primary" onclick="executePaymentMock()">Bayar Sekarang</button>
     </div>
 
+    <!-- SCREEN 4: BERHASIL -->
     <div id="screen-success" class="screen" style="justify-content:center;">
         <div class="success-wrapper">
             <div class="success-icon">✓</div>
@@ -506,6 +499,7 @@
         <button class="btn-primary" style="margin-top:16px;" onclick="navigateTo('screen-tracking')">Pantau Emasmu di Sini</button>
     </div>
 
+    <!-- SCREEN 5: TRACKING LAYANAN AMBIL FISIK -->
     <div id="screen-tracking" class="screen">
         <div class="card tracking-meta-header">
             <p>ESTIMASI AMBIL FISIK SELESAI</p>
@@ -519,6 +513,7 @@
         <h2>Progres Ambil Fisik Emas</h2>
         
         <div class="v-timeline">
+            <!-- TAHAP 5 -->
             <div class="vt-item" id="track-stage-5">
                 <div class="vt-node"></div>
                 <div class="vt-card">
@@ -533,6 +528,7 @@
                 </div>
             </div>
 
+            <!-- TAHAP 4 -->
             <div class="vt-item" id="track-stage-4">
                 <div class="vt-node"></div>
                 <div class="vt-card">
@@ -545,6 +541,7 @@
                     </div>
                     <div class="vt-desc">Emas telah tiba di cabang tujuan dan siap untuk diambil.</div>
 
+                    <!-- Booking Area -->
                     <div id="booking-box">
                         <h4 style="font-size:12px; margin-bottom:8px; color:var(--tring-green);">Booking Jadwal Kedatangan</h4>
                         <div class="form-group" style="margin-bottom:8px;">
@@ -569,6 +566,7 @@
                         <button class="btn-primary" style="padding:8px; font-size:12px;" onclick="confirmBookingSlot()">Konfirmasi Jadwal Booking</button>
                     </div>
 
+                    <!-- Kode Pengambilan Barcode Digital -->
                     <div id="barcode-box">
                         <h4 style="font-size:12px; color:var(--tring-green); margin-bottom:2px;">Kode Pengambilan Digital</h4>
                         <p style="font-size:10px; color:var(--text-muted);">Tunjukkan barcode ini ke petugas</p>
@@ -579,6 +577,7 @@
                 </div>
             </div>
 
+            <!-- TAHAP 3 -->
             <div class="vt-item" id="track-stage-3">
                 <div class="vt-node"></div>
                 <div class="vt-card">
@@ -594,6 +593,7 @@
                 </div>
             </div>
 
+            <!-- TAHAP 2 -->
             <div class="vt-item" id="track-stage-2">
                 <div class="vt-node"></div>
                 <div class="vt-card">
@@ -609,6 +609,7 @@
                 </div>
             </div>
 
+            <!-- TAHAP 1 -->
             <div class="vt-item" id="track-stage-1">
                 <div class="vt-node"></div>
                 <div class="vt-card">
@@ -627,6 +628,7 @@
         <button class="btn-primary" id="btn-cs-escalation" style="background-color:#555; display:none; margin-top:15px;" onclick="alert('Menghubungkan ke Customer Service Tring! via WhatsApp...')">Hubungi Customer Service</button>
     </div>
 
+    <!-- SIMULATION DOCK PANEL -->
     <div class="simulation-dock">
         <div class="sim-headline">Panel Kontrol Simulasi Alur Status (Demo Pengujian)</div>
         <div class="sim-grid">
@@ -666,43 +668,43 @@
             title: "🏮 Lunar Celebration", 
             desc: "Desain mewah edisi khusus Tahun Baru Imlek dengan tekstur naga, lampion keberuntungan, dan aksen emas kemakmuran.", 
             bg: "linear-gradient(135deg, #B71C1C 0%, #D32F2F 50%, #880E4F 100%)", 
-            icon: "🏮", textColor: "#FFF", logoColor: "#FFCB05"
+            icon: "🏮", textColor: "#FFF", invertLogo: true
         },
         "Natal": { 
             title: "🎄 Christmas Magic", 
             desc: "Edisi Damai Natal dengan perpaduan latar merah beludru premium, siluet pohon natal, kepingan salju, dan kehangatan keluarga.", 
             bg: "linear-gradient(135deg, #C62828 0%, #B71C1C 60%, #1B5E20 100%)", 
-            icon: "🎄", textColor: "#FFF", logoColor: "#FFF"
+            icon: "🎄", textColor: "#FFF", invertLogo: true
         },
         "Idul Fitri": { 
             title: "🌙 Berkah Fitri", 
             desc: "Edisi Lebaran bernuansa hijau khusyuk dengan ornamen kubah masjid, ketupat, dan guratan garis geometris islami berlapis emas.", 
             bg: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 70%, #C29B38 100%)", 
-            icon: "🌙", textColor: "#FFF", logoColor: "#FFCB05"
+            icon: "🌙", textColor: "#FFF", invertLogo: true
         },
         "Graduation": { 
             title: "🎓 Class of 2026", 
             desc: "Apresiasi pencapaian akademik terbaik. Dilengkapi ilustrasi topi toga minimalis, ijazah, dan pita laurel emas.", 
             bg: "linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #001233 100%)", 
-            icon: "🎓", textColor: "#FFF", logoColor: "#FFCB05"
+            icon: "🎓", textColor: "#FFF", invertLogo: true
         },
         "Wedding": { 
             title: "💍 Eternal Love", 
             desc: "Desain selembut sutra putih mutiara dengan ukiran mawar timbul eksklusif untuk melambangkan ikatan suci pernikahan abadi.", 
             bg: "linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 60%, #E0E0E0 100%)", 
-            icon: "💍", textColor: "#333", logoColor: "#00824B"
+            icon: "💍", textColor: "#333", invertLogo: false
         },
         "Ulang Tahun": { 
             title: "🎂 Special Day Gift", 
             desc: "Penuh keceriaan dan warna positif. Ilustrasi balon udara, konfeti pesta, dan ucapan ulang tahun terbaik.", 
             bg: "linear-gradient(135deg, #EC407A 0%, #F48FB1 100%)", 
-            icon: "🎂", textColor: "#FFF", logoColor: "#FFF"
+            icon: "🎂", textColor: "#FFF", invertLogo: true
         },
         "Custom Polos": { 
             title: "✨ Premium Card", 
             desc: "Desain kartu standar minimalis dengan pola garis korporat modern bersinar, memberikan kesan eksklusif dan timeless.", 
             bg: "linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%)", 
-            icon: "✨", textColor: "#333", logoColor: "#00824B"
+            icon: "✨", textColor: "#333", invertLogo: false
         }
     };
 
@@ -775,13 +777,19 @@
         const currentStyle = temaStyles[transactionData.temaKemasan];
         const cardVisual = document.getElementById('gold-card-visual');
         const overlayVisual = document.getElementById('card-overlay-style');
-        const logoBrandText = document.getElementById('card-dynamic-logo-color');
+        const dynamicLogoImg = document.getElementById('card-dynamic-logo');
         
         // Manipulasi Warna & Elemen Berdasarkan Tema yang Dipilih
         cardVisual.style.background = currentStyle.bg;
         cardVisual.style.color = brand === "Galeri 24" ? currentStyle.textColor : "#333";
         overlayVisual.innerText = brand === "Galeri 24" ? currentStyle.icon : "⚖️";
-        logoBrandText.style.color = brand === "Galeri 24" ? currentStyle.logoColor : "#00824B";
+
+        // Kontras Logo Gambar: Beri filter putih jika latar gelap, hilangkan filter jika latar terang
+        if (brand === "Galeri 24" && currentStyle.invertLogo) {
+            dynamicLogoImg.style.filter = "brightness(0) invert(1) drop-shadow(0px 1px 1px rgba(0,0,0,0.3))";
+        } else {
+            dynamicLogoImg.style.filter = "none";
+        }
 
         document.getElementById('preview-speech-title').innerText = brand === "Galeri 24" ? currentStyle.title : "STANDARD BOX";
         document.getElementById('preview-speech-desc').innerText = brand === "Galeri 24" ? currentStyle.desc : `Kemasan Logam Mulia Klasik Resmi Bersertifikat PT ${brand.toUpperCase()}.`;
